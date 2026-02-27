@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  const toolList = [
+=======
+const toolList = [
+>>>>>>> e321f02357dfc42b05bc1682a056cdacdb7aba38
     { id: 1, name: "图片压缩", desc: "免费在线图片压缩，无损缩小体积", url: "https://baidu.com", type: "工具", view: 328, like: 86 },
     { id: 2, name: "PDF转换", desc: "PDF转Word、图片、PPT免费转换", url: "https://baidu.com", type: "工具", view: 412, like: 105 },
     { id: 3, name: "在线工具箱", desc: "百款实用在线小工具合集", url: "https://baidu.com", type: "工具", view: 566, like: 142 },
@@ -23,4 +27,8 @@
     { id: 14, name: "生活查询", desc: "快递、天气、生活常用工具", url: "https://baidu.com", type: "生活", view: 432, like: 118 },
 
     { id: 15, name: "软件资源", desc: "Windows、Mac实用软件分享", url: "https://baidu.com", type: "资源", view: 611, like: 185 }
+<<<<<<< HEAD
 ];
+=======
+];
+>>>>>>> e321f02357dfc42b05bc1682a056cdacdb7aba38
