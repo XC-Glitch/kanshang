@@ -1,31 +1,85 @@
- <script src="tool-data.js"></script>
+ <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>看上 - 实用工具导航</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",Arial,sans-serif}
+:root{--primary-color:#fff;--secondary-color:#87E8DE;--secondary-dark:#6BC9BE;--text-color:#333;--light-gray:#f5f5f5;--border-color:#e0e0e0}
+body{background:var(--light-gray);color:var(--text-color);line-height:1.6}
+.navbar{background:var(--primary-color);border-bottom:1px solid var(--secondary-color);padding:15px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 5px rgba(0,0,0,.05)}
+.logo{font-size:24px;font-weight:700;color:var(--secondary-color)}
+.nav-links{display:flex;list-style:none}
+.nav-links li{margin-left:22px}
+.nav-links a{text-decoration:none;color:var(--text-color);font-size:16px;transition:color .3s}
+.nav-links a:hover{color:var(--secondary-dark)}
+.hero{text-align:center;padding:60px 20px;background:linear-gradient(135deg,#fff 0%,#f0fffd 100%);border-bottom:1px solid var(--border-color)}
+.hero h1{font-size:32px;margin-bottom:15px;color:#333}
+.hero p{font-size:16px;color:#666;max-width:600px;margin:0 auto 22px}
+.search-box{max-width:600px;margin:0 auto;display:flex;gap:8px}
+.search-box input{flex:1;padding:14px 18px;border:1px solid var(--border-color);border-radius:10px;font-size:15px;outline:0}
+.search-box input:focus{border-color:var(--secondary-color)}
+.search-box button{padding:14px 22px;background:var(--secondary-color);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:15px}
+.search-box button:hover{background:var(--secondary-dark)}
+.rank-container{max-width:1200px;margin:40px auto;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px}
+.tool-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.04);border:1px solid var(--border-color);transition:transform .2s}
+.tool-card:hover{transform:translateY(-3px)}
+.tool-card h3{font-size:16px;margin-bottom:8px;color:#333}
+.tool-card .desc{font-size:13px;color:#888;height:36px;overflow:hidden;margin-bottom:12px}
+.tool-card .stats{display:flex;justify-content:space-between;font-size:12px;color:#999;margin-bottom:12px}
+.tool-card .go{display:inline-block;background:var(--secondary-color);color:#fff;font-size:13px;padding:6px 11px;border-radius:6px;text-decoration:none}
+.tool-card .go:hover{background:var(--secondary-dark)}
+footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25px 0;margin-top:50px}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="logo">看上</div>
+  <ul class="nav-links">
+    <li><a href="#" onclick="goType('工具')">工具</a></li>
+    <li><a href="#" onclick="goType('设计')">设计</a></li>
+    <li><a href="#" onclick="goType('AIGC')">AIGC</a></li>
+    <li><a href="#" onclick="goType('影视')">影视</a></li>
+    <li><a href="#" onclick="goType('动漫')">动漫</a></li>
+    <li><a href="#" onclick="goType('音乐')">音乐</a></li>
+    <li><a href="#" onclick="goType('游戏')">游戏</a></li>
+    <li><a href="#" onclick="goType('学习')">学习</a></li>
+    <li><a href="#" onclick="goType('生活')">生活</a></li>
+    <li><a href="#" onclick="goType('资源')">资源</a></li>
+  </ul>
+</div>
+
+<div class="hero">
+  <h1>看上 - 实用工具导航</h1>
+  <p>收集全网优质在线工具，按热度智能排序，发现最实用的工具</p>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="搜索工具名称、功能、关键词...">
+    <button onclick="goSearch()">搜索</button>
+  </div>
+</div>
+
+<div class="rank-container" id="cardContainer"></div>
+
+<footer>
+  <p>© 2026 看上 - 让生活更方便</p>
+</footer>
+
+<script src="tool-data.js"></script>
 <script>
-function renderAll() {
-  const container = document.getElementById("cardContainer");
-  container.innerHTML = "";
-  toolList.forEach(item => {
-    container.innerHTML += `
+function renderAll(){const e=document.getElementById("cardContainer");e.innerHTML="",toolList.forEach(t=>{e.innerHTML+=`
       <div class="tool-card">
-        <h3>${item.name}</h3>
-        <div class="desc">${item.desc}</div>
+        <h3>${t.name}</h3>
+        <div class="desc">${t.desc}</div>
         <div class="stats">
-          <span>👁️ ${item.view}</span>
-          <span>👍 ${item.like}</span>
+          <span>👁️ ${t.view}</span>
+          <span>👍 ${t.like}</span>
         </div>
-        <a href="${item.url}" target="_blank" class="go">前往</a>
+        <a href="${t.url}" target="_blank" class="go">前往</a>
       </div>
-    `;
-  });
-}
-
-function goSearch() {
-  const q = document.getElementById("searchInput").value.trim();
-  if (q) location.href = `search.html?q=${encodeURIComponent(q)}`;
-}
-
-function goType(type) {
-  location.href = `search.html?type=${encodeURIComponent(type)}`;
-}
-
-renderAll();
+    `})}function goSearch(){const e=document.getElementById("searchInput").value.trim();e&&(location.href=`search.html?q=${encodeURIComponent(e)}`)}function goType(e){location.href=`search.html?type=${encodeURIComponent(e)}`}renderAll();
 </script>
+
+</body>
+</html>

@@ -1,57 +1,81 @@
- <script src="tool-data.js"></script>
+ <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>搜索结果 - 看上</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",Arial,sans-serif}
+:root{--primary-color:#fff;--secondary-color:#87E8DE;--secondary-dark:#6BC9BE;--text-color:#333;--light-gray:#f5f5f5;--border-color:#e0e0e0}
+body{background:var(--light-gray);color:var(--text-color);line-height:1.6}
+.navbar{background:var(--primary-color);border-bottom:1px solid var(--secondary-color);padding:15px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 5px rgba(0,0,0,.05)}
+.logo{font-size:24px;font-weight:700;color:var(--secondary-color)}
+.nav-links{display:flex;list-style:none}
+.nav-links li{margin-left:22px}
+.nav-links a{text-decoration:none;color:var(--text-color);font-size:16px;transition:color .3s}
+.nav-links a:hover{color:var(--secondary-dark)}
+.search-bar{max-width:600px;margin:40px auto 20px;display:flex;gap:8px;padding:0 20px}
+.search-bar input{flex:1;padding:14px 18px;border:1px solid var(--border-color);border-radius:10px;font-size:15px;outline:0}
+.search-bar input:focus{border-color:var(--secondary-color)}
+.search-bar button{padding:14px 22px;background:var(--secondary-color);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:15px}
+.search-bar button:hover{background:var(--secondary-dark)}
+.result-title{text-align:center;margin:0 20px 30px;font-size:18px;color:#555}
+.rank-container{max-width:1200px;margin:0 auto 40px;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px}
+.tool-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.04);border:1px solid var(--border-color);transition:transform .2s}
+.tool-card:hover{transform:translateY(-3px)}
+.tool-card h3{font-size:16px;margin-bottom:8px;color:#333}
+.tool-card .desc{font-size:13px;color:#888;height:36px;overflow:hidden;margin-bottom:12px}
+.tool-card .stats{display:flex;justify-content:space-between;font-size:12px;color:#999;margin-bottom:12px}
+.tool-card .go{display:inline-block;background:var(--secondary-color);color:#fff;font-size:13px;padding:6px 11px;border-radius:6px;text-decoration:none}
+.tool-card .go:hover{background:var(--secondary-dark)}
+.empty{text-align:center;grid-column:1/-1;padding:60px 20px;color:#999}
+footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25px 0;margin-top:50px}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="logo">看上</div>
+  <ul class="nav-links">
+    <li><a href="#" onclick="goType('工具')">工具</a></li>
+    <li><a href="#" onclick="goType('设计')">设计</a></li>
+    <li><a href="#" onclick="goType('AIGC')">AIGC</a></li>
+    <li><a href="#" onclick="goType('影视')">影视</a></li>
+    <li><a href="#" onclick="goType('动漫')">动漫</a></li>
+    <li><a href="#" onclick="goType('音乐')">音乐</a></li>
+    <li><a href="#" onclick="goType('游戏')">游戏</a></li>
+    <li><a href="#" onclick="goType('学习')">学习</a></li>
+    <li><a href="#" onclick="goType('生活')">生活</a></li>
+    <li><a href="#" onclick="goType('资源')">资源</a></li>
+  </ul>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="搜索工具名称、功能、关键词...">
+  <button onclick="goSearch()">搜索</button>
+</div>
+
+<div class="result-title" id="resultTitle"></div>
+<div class="rank-container" id="cardContainer"></div>
+
+<footer>
+  <p>© 2026 看上 - 让生活更方便</p>
+</footer>
+
+<script src="tool-data.js"></script>
 <script>
-function doFilter() {
-  const params = new URLSearchParams(location.search);
-  const type = params.get("type");
-  const q = params.get("q");
-
-  let filtered = toolList;
-  let title = "";
-
-  if (type) {
-    filtered = toolList.filter(i => i.type === type);
-    title = "分类：" + type;
-  } else if (q) {
-    filtered = toolList.filter(i =>
-      i.name.includes(q) || i.desc.includes(q)
-    );
-    title = "搜索：" + q;
-  } else {
-    title = "全部工具";
-  }
-
-  document.getElementById("resultTitle").textContent = `${title}（共 ${filtered.length} 个）`;
-  const container = document.getElementById("cardContainer");
-  container.innerHTML = "";
-
-  if (filtered.length === 0) {
-    container.innerHTML = `<div class="empty">暂无结果，换个关键词试试～</div>`;
-    return;
-  }
-
-  filtered.forEach(item => {
-    container.innerHTML += `
+function doFilter(){const e=new URLSearchParams(location.search),t=e.get("type"),i=e.get("q");let a=toolList,s="";t?(a=toolList.filter(o=>o.type===t),s="分类："+t):i&&(a=toolList.filter(o=>o.name.includes(i)||o.desc.includes(i)),s="搜索："+i);document.getElementById("resultTitle").textContent=`${s}（共 ${a.length} 个）`;const r=document.getElementById("cardContainer");if(r.innerHTML="",0===a.length)return void(r.innerHTML=`<div class="empty">暂无结果，换个关键词试试～</div>`);a.forEach(o=>{r.innerHTML+=`
       <div class="tool-card">
-        <h3>${item.name}</h3>
-        <div class="desc">${item.desc}</div>
+        <h3>${o.name}</h3>
+        <div class="desc">${o.desc}</div>
         <div class="stats">
-          <span>👁️ ${item.view}</span>
-          <span>👍 ${item.like}</span>
+          <span>👁️ ${o.view}</span>
+          <span>👍 ${o.like}</span>
         </div>
-        <a href="${item.url}" target="_blank" class="go">前往</a>
+        <a href="${o.url}" target="_blank" class="go">前往</a>
       </div>
-    `;
-  });
-}
-
-function goSearch() {
-  const q = document.getElementById("searchInput").value.trim();
-  if (q) location.href = `search.html?q=${encodeURIComponent(q)}`;
-}
-
-function goType(type) {
-  location.href = `search.html?type=${encodeURIComponent(type)}`;
-}
-
-doFilter();
+    `})}function goSearch(){const e=document.getElementById("searchInput").value.trim();e&&(location.href=`search.html?q=${encodeURIComponent(e)}`)}function goType(e){location.href=`search.html?type=${encodeURIComponent(e)}`}doFilter();
 </script>
+
+</body>
+</html>
