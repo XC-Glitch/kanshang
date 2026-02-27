@@ -66,13 +66,13 @@ footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25
 <script>
 function doFilter(){const e=new URLSearchParams(location.search),t=e.get("type"),i=e.get("q");let a=toolList,s="";t?(a=toolList.filter(o=>o.type===t),s="分类："+t):i&&(a=toolList.filter(o=>o.name.includes(i)||o.desc.includes(i)),s="搜索："+i);document.getElementById("resultTitle").textContent=`${s}（共 ${a.length} 个）`;const r=document.getElementById("cardContainer");if(r.innerHTML="",0===a.length)return void(r.innerHTML=`<div class="empty">暂无结果，换个关键词试试～</div>`);a.forEach(o=>{r.innerHTML+=`
       <div class="tool-card">
-        <h3>${o.name}</h3>
-        <div class="desc">${o.desc}</div>
+        <h3>${t.name}</h3>
+        <div class="desc">${t.desc}</div>
         <div class="stats">
-          <span>👁️ ${o.view}</span>
-          <span>👍 ${o.like}</span>
+          <span>👁️ ${t.view}</span>
+          <span onclick="likeItem(${t.id})" style="cursor:pointer;color:#87E8DE">👍 ${t.like}</span>
         </div>
-        <a href="${o.url}" target="_blank" class="go">前往</a>
+        <a href="${t.url}" target="_blank" class="go">前往</a>
       </div>
     `})}function goSearch(){const e=document.getElementById("searchInput").value.trim();e&&(location.href=`search.html?q=${encodeURIComponent(e)}`)}function goType(e){location.href=`search.html?type=${encodeURIComponent(e)}`}doFilter();
 </script>

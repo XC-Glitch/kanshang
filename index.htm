@@ -74,7 +74,7 @@ function renderAll(){const e=document.getElementById("cardContainer");e.innerHTM
         <div class="desc">${t.desc}</div>
         <div class="stats">
           <span>👁️ ${t.view}</span>
-          <span>👍 ${t.like}</span>
+          <span onclick="likeItem(${t.id})" style="cursor:pointer;color:#87E8DE">👍 ${t.like}</span>
         </div>
         <a href="${t.url}" target="_blank" class="go">前往</a>
       </div>
