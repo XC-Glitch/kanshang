@@ -1,9 +1,35 @@
  <script src="tool-data.js"></script>
 <script>
-function renderAll() {
+function doFilter() {
+  const params = new URLSearchParams(location.search);
+  const type = params.get("type");
+  const q = params.get("q");
+
+  let filtered = toolList;
+  let title = "";
+
+  if (type) {
+    filtered = toolList.filter(i => i.type === type);
+    title = "分类：" + type;
+  } else if (q) {
+    filtered = toolList.filter(i =>
+      i.name.includes(q) || i.desc.includes(q)
+    );
+    title = "搜索：" + q;
+  } else {
+    title = "全部工具";
+  }
+
+  document.getElementById("resultTitle").textContent = `${title}（共 ${filtered.length} 个）`;
   const container = document.getElementById("cardContainer");
   container.innerHTML = "";
-  toolList.forEach(item => {
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty">暂无结果，换个关键词试试～</div>`;
+    return;
+  }
+
+  filtered.forEach(item => {
     container.innerHTML += `
       <div class="tool-card">
         <h3>${item.name}</h3>
@@ -27,5 +53,5 @@ function goType(type) {
   location.href = `search.html?type=${encodeURIComponent(type)}`;
 }
 
-renderAll();
+doFilter();
 </script>
