@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -8,11 +8,11 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",Arial,sans-serif}
 :root{--primary-color:#fff;--secondary-color:#87E8DE;--secondary-dark:#6BC9BE;--text-color:#333;--light-gray:#f5f5f5;--border-color:#e0e0e0}
 body{background:var(--light-gray);color:var(--text-color);line-height:1.6}
-.navbar{background:var(--primary-color);border-bottom:1px solid var(--secondary-color);padding:15px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 5px rgba(0,0,0,.05)}
+.navbar{background:var(--primary-color);border-bottom:1px solid var(--secondary-color);padding:15px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 5px rgba(0,0,0,.05);flex-wrap:wrap}
 .logo{font-size:24px;font-weight:700;color:var(--secondary-color)}
-.nav-links{display:flex;list-style:none}
-.nav-links li{margin-left:22px}
-.nav-links a{text-decoration:none;color:var(--text-color);font-size:16px;transition:color .3s}
+.nav-links{display:flex;list-style:none;flex-wrap:wrap;gap:8px}
+.nav-links li{margin-left:0}
+.nav-links a{text-decoration:none;color:var(--text-color);font-size:16px;transition:color .3s;padding:4px 8px;display:block}
 .nav-links a:hover{color:var(--secondary-dark)}
 .hero{text-align:center;padding:60px 20px;background:linear-gradient(135deg,#fff 0%,#f0fffd 100%);border-bottom:1px solid var(--border-color)}
 .hero h1{font-size:32px;margin-bottom:15px;color:#333}
@@ -39,8 +39,7 @@ footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25
   <div class="logo">看上</div>
   <ul class="nav-links">
     <li><a href="#" onclick="goType('工具')">工具</a></li>
-    <li><a href="#" onclick="goType('设计')">设计</a></li>
-    <li><a href="#" onclick="goType('AIGC')">AIGC</a></li>
+    <li><a href="#" onclick="goType('AI工具')">AI工具</a></li>
     <li><a href="#" onclick="goType('影视')">影视</a></li>
     <li><a href="#" onclick="goType('动漫')">动漫</a></li>
     <li><a href="#" onclick="goType('音乐')">音乐</a></li>
@@ -70,9 +69,9 @@ footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js"></script>
 
 <script>
-// ==================== Supabase 配置（你的信息） ====================
+// ==================== Supabase 配置（替换为你的密钥） ====================
 const SUPABASE_URL = "https://yamonzbighacvvehwaad.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlhbW9uemJpZ2hhY3Z2ZWh3YWFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNTI1NTUsImV4cCI6MjA4NzgyODU1NX0.xo-gMJi_7q4Wb9vpjs-BD-5RsmAM_erIQrpoXbFwj1M"; // 替换为完整密钥
+const SUPABASE_KEY = "你的完整Anon Key"; // 替换为自己的完整密钥
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ==================== 缓存 DOM 元素 ====================
@@ -100,9 +99,8 @@ async function loadData() {
   } catch (err) {
     console.warn("加载数据失败，使用本地默认值：", err);
   } finally {
-    // 核心：按浏览量降序排序（浏览量越高越靠前）
+    // 按浏览量降序排序
     toolList.sort((a, b) => b.view - a.view);
-    // 排序后再渲染
     renderAll();
   }
 }
@@ -123,7 +121,7 @@ async function syncToSupabase(id, type) {
   if (error) console.warn("同步失败：", error);
 }
 
-// ==================== 渲染与交互（无闪烁） ====================
+// ==================== 渲染与交互 ====================
 function createToolCard(item) {
   const card = document.createElement("div");
   card.className = "tool-card";
@@ -137,21 +135,18 @@ function createToolCard(item) {
     <a href="${item.url}" target="_blank" class="go" data-id="${item.id}">前往</a>
   `;
 
-  // 点赞事件（无闪烁）
+  // 点赞事件
   card.querySelector(".like-count").addEventListener("click", () => {
     item.like++;
     card.querySelector(".like-count").textContent = `👍 ${item.like}`;
     syncToSupabase(item.id, 'like');
   });
 
-  // 访问量事件（无闪烁）
+  // 访问量事件
   card.querySelector(".go").addEventListener("click", () => {
     item.view++;
     card.querySelector(".view-count").textContent = `👁️ ${item.view}`;
     syncToSupabase(item.id, 'view');
-    // 可选：点击后重新排序（如需实时更新排行）
-    // toolList.sort((a, b) => b.view - a.view);
-    // renderAll();
   });
 
   return card;
@@ -167,7 +162,7 @@ function renderAll() {
 // ==================== 搜索/分类跳转 ====================
 function goSearch() {
   const q = searchInput.value.trim();
-  q && (location.href = `search.html?q=${encodeURIComponent(q)}`);
+  if (q) location.href = `search.html?q=${encodeURIComponent(q)}`;
 }
 
 function goType(type) {

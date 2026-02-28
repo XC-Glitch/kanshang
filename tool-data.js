@@ -1,56 +1,50 @@
 const toolList = [
   // ==================== 工具 ====================
-  { id: 1, name: "图片压缩", desc: "免费在线图片压缩，无损缩小体积", url: "https://tinypng.com", type: "工具", view: 328, like: 86 },
-  { id: 2, name: "PDF转换", desc: "PDF转Word、图片、PPT免费转换", url: "https://www.ilovepdf.com", type: "工具", view: 412, like: 105 },
-  { id: 3, name: "在线工具箱", desc: "百款实用在线小工具合集", url: "https://tool.lu", type: "工具", view: 566, like: 142 },
-  { id: 4, name: "二维码生成", desc: "免费生成、解析各种二维码", url: "https://cli.im", type: "工具", view: 298, like: 76 },
-  { id: 5, name: "格式转换", desc: "音视频、图片格式在线转换", url: "https://convertio.co/zh", type: "工具", view: 344, like: 92 },
+  { id: 1, name: "百家姓加解密", desc: "敏感字符转换工具，免费在线使用", url: "https://baijiaxingjiemi.com", type: "工具", view: 548, like: 164 },
+  { id: 2, name: "Map Genie", desc: "3A游戏地图工具，精准导航游戏场景", url: "https://mapgenie.io", type: "工具", view: 625, like: 188 },
+  { id: 3, name: "I miss the office", desc: "模拟办公室氛围的声音工具，放松/专注使用", url: "https://imisstheoffice.com", type: "工具", view: 832, like: 249 },
+  { id: 4, name: "哈希影视", desc: "区块链+影视生态垂直导航，免费高清影视资源", url: "https://hashvideo.com", type: "工具", view: 1258, like: 386 },
+  { id: 5, name: "大额流量卡", desc: "流量卡办理与知识科普，生活学习实用参考", url: "https://daliuliangka.com", type: "工具", view: 587, like: 176 },
 
-  // ==================== 设计 ====================
-  { id: 6, name: "在线PS", desc: "网页版Photoshop，无需安装", url: "https://www.photopea.com", type: "设计", view: 389, like: 97 },
-  { id: 7, name: "图标下载", desc: "免费矢量图标、PNG素材", url: "https://www.flaticon.com", type: "设计", view: 452, like: 121 },
-  { id: 8, name: "可画设计", desc: "免费海报、封面、PPT在线制作", url: "https://www.canva.com", type: "设计", view: 521, like: 156 },
-  { id: 9, name: "免费图库", desc: "可商用高清无版权图片", url: "https://unsplash.com", type: "设计", view: 487, like: 139 },
-
-  // ==================== AIGC ====================
-  { id: 10, name: "AI绘画", desc: "AI生成图片，支持多种风格", url: "https://www.midjourney.com", type: "AIGC", view: 721, like: 235 },
-  { id: 11, name: "AI写作", desc: "AI文案、文章、总结生成", url: "https://yiyan.baidu.com", type: "AIGC", view: 645, like: 198 },
-  { id: 12, name: "AI语音", desc: "文字转语音，多种音色选择", url: "https://voice.baidu.com", type: "AIGC", view: 427, like: 117 },
-  { id: 13, name: "AI代码", desc: "AI编程、代码解释、自动生成", url: "https://github.com/copilot", type: "AIGC", view: 562, like: 174 },
+  // ==================== AI工具（原AIGC） ====================
+  { id: 10, name: "Ai女友", desc: "中文AIGC平台，含角色扮演、效率工具等功能", url: "https://ainvyou.com", type: "AI工具", view: 1456, like: 437 },
+  { id: 11, name: "Toonme", desc: "AI照片转卡通工具，一键生成卡通形象", url: "https://toonme.com", type: "AI工具", view: 1187, like: 356 },
+  { id: 12, name: "绿色正规撸美元", desc: "海外合规收益方法科普，学习参考用途", url: "https://lumeiyuan.com", type: "AI工具", view: 612, like: 184 },
+  { id: 13, name: "莱卡云", desc: "云计算/游戏云服务，BGP多线接入", url: "https://laikayun.com", type: "AI工具", view: 689, like: 207 },
 
   // ==================== 影视 ====================
-  { id: 14, name: "影视在线", desc: "高清电影、电视剧免费在线", url: "https://www.watchseries.so", type: "影视", view: 942, like: 310 },
-  { id: 15, name: "影视搜索", desc: "全网影视资源快速检索", url: "https://www.zhuixinfan.com", type: "影视", view: 876, like: 276 },
-  { id: 16, name: "纪录片", desc: "国内外高清纪录片免费观看", url: "https://www.jilunihao.net", type: "影视", view: 532, like: 168 },
+  { id: 14, name: "百思派电影网", desc: "免费高清电影、电视剧在线观看，无广告", url: "https://baisipai.com", type: "影视", view: 987, like: 295 },
+  { id: 15, name: "555电影网", desc: "全网影视资源聚合，免费高清播放", url: "https://555dyw.com", type: "影视", view: 1124, like: 342 },
+  { id: 16, name: "火车太顺", desc: "免费影视资源导航，支持多源播放", url: "https://huochetaishun.com", type: "影视", view: 876, like: 258 },
 
   // ==================== 动漫 ====================
-  { id: 17, name: "番剧在线", desc: "新番、旧番动漫免费看", url: "https://www.bilibili.com", type: "动漫", view: 821, like: 263 },
-  { id: 18, name: "动漫搜索", desc: "全网动漫资源搜索", url: "https://www.dm530p.com", type: "动漫", view: 679, like: 201 },
-  { id: 19, name: "漫画阅读", desc: "国漫、日漫免费在线阅读", url: "https://www.manhuagui.com", type: "动漫", view: 546, like: 159 },
+  { id: 17, name: "无广告TV", desc: "无广告影视播放平台，高清免费", url: "https://wuguanggao.tv", type: "动漫", view: 1053, like: 317 },
+  { id: 18, name: "茶杯狐", desc: "影视资源聚合搜索，免费高清观影", url: "https://cupfox.com", type: "动漫", view: 1328, like: 405 },
+  { id: 19, name: "Guo.Ge", desc: "世界各国国歌国旗资料站，可作动漫文化素材", url: "https://guo.ge", type: "动漫", view: 768, like: 230 },
 
   // ==================== 音乐 ====================
-  { id: 20, name: "无损音乐", desc: "全网音乐免费试听与下载", url: "https://music.163.com", type: "音乐", view: 765, like: 241 },
-  { id: 21, name: "歌词搜索", desc: "根据歌词查找歌曲名称", url: "https://www.geciduoduo.com", type: "音乐", view: 312, like: 89 },
-  { id: 22, name: "伴奏下载", desc: "歌曲伴奏、纯音乐下载", url: "https://www.5sing.kugou.com", type: "音乐", view: 387, like: 106 },
+  { id: 20, name: "SkylineWebcams", desc: "全球高清实况摄像头，背景音效可作音乐素材", url: "https://skylinewebcams.com", type: "音乐", view: 945, like: 284 },
+  { id: 21, name: "资源避难所", desc: "PC/安卓绿色软件+免费游戏资源分享", url: "https://ziyuannansuo.com", type: "音乐", view: 892, like: 268 },
+  { id: 22, name: "麋鹿游戏仓库", desc: "各类免费单机游戏资源整合下载", url: "https://milugame.com", type: "音乐", view: 785, like: 236 },
 
   // ==================== 游戏 ====================
-  { id: 23, name: "单机游戏", desc: "经典单机游戏资源合集", url: "https://www.3dmgame.com", type: "游戏", view: 698, like: 217 },
-  { id: 24, name: "小游戏", desc: "网页在线小游戏，无需下载", url: "https://www.4399.com", type: "游戏", view: 845, like: 282 },
-  { id: 25, name: "游戏攻略", desc: "各类游戏攻略、资讯、评测", url: "https://www.3dmgame.com", type: "游戏", view: 421, like: 113 },
+  { id: 23, name: "668游戏仓库", desc: "多平台游戏资源，免费分享无套路", url: "https://668game.com", type: "游戏", view: 742, like: 223 },
+  { id: 24, name: "咸鱼单机", desc: "多平台单机游戏整合，免费下载", url: "https://xianyudanji.com", type: "游戏", view: 817, like: 245 },
+  { id: 25, name: "Chrono Divide", desc: "网页版红色警戒2，无需下载直接玩", url: "https://chronodivide.com", type: "游戏", view: 1024, like: 307 },
 
   // ==================== 学习 ====================
-  { id: 26, name: "网课平台", desc: "IT、考证、考研各类学习资源", url: "https://www.bilibili.com", type: "学习", view: 547, like: 163 },
-  { id: 27, name: "文档搜索", desc: "PPT、Word、PDF学习资料搜索", url: "https://www.doc88.com", type: "学习", view: 398, like: 107 },
-  { id: 28, name: "编程学习", desc: "前端、后端、编程入门教程", url: "https://www.runoob.com", type: "学习", view: 621, like: 192 },
-  { id: 29, name: "外语学习", desc: "英语、日语、韩语学习工具", url: "https://www.youdao.com", type: "学习", view: 476, like: 131 },
+  { id: 26, name: "跳跳兔导航", desc: "综合类资源导航，覆盖工作、学习等多领域", url: "https://tiaotiaotu.com", type: "学习", view: 954, like: 286 },
+  { id: 27, name: "资源喵网", desc: "全网稀缺资源整合，免费分享影视/软件等资源", url: "https://ziyuanniao.com", type: "学习", view: 873, like: 262 },
+  { id: 28, name: "SkylineWebcams", desc: "全球高清实况摄像头，可学习地理/文化知识", url: "https://skylinewebcams.com", type: "学习", view: 945, like: 284 },
+  { id: 29, name: "Guo.Ge", desc: "世界各国国歌国旗学习资料站", url: "https://guo.ge", type: "学习", view: 768, like: 230 },
 
   // ==================== 生活 ====================
-  { id: 30, name: "生活查询", desc: "快递、天气、生活常用工具", url: "https://www.baidu.com", type: "生活", view: 432, like: 118 },
-  { id: 31, name: "快递查询", desc: "一键查询全网快递物流", url: "https://www.kuaidi100.com", type: "生活", view: 385, like: 99 },
-  { id: 32, name: "油价查询", desc: "全国今日油价实时查询", url: "https://www.qiyoujiage.com", type: "生活", view: 297, like: 78 },
+  { id: 30, name: "百家姓加解密", desc: "敏感字符转换，生活中隐私保护实用工具", url: "https://baijiaxingjiemi.com", type: "生活", view: 548, like: 164 },
+  { id: 31, name: "大额流量卡", desc: "生活实用流量卡办理与查询", url: "https://daliuliangka.com", type: "生活", view: 587, like: 176 },
+  { id: 32, name: "跳跳兔导航", desc: "生活类资源综合导航，便捷查找各类服务", url: "https://tiaotiaotu.com", type: "生活", view: 954, like: 286 },
 
   // ==================== 资源 ====================
-  { id: 33, name: "软件资源", desc: "Windows、Mac实用软件分享", url: "https://www.pc6.com", type: "资源", view: 611, like: 185 },
-  { id: 34, name: "电子书", desc: "小说、教材、电子书免费下载", url: "https://www.book118.com", type: "资源", view: 529, like: 157 },
-  { id: 35, name: "模板资源", desc: "PPT、简历、表格模板免费下载", url: "https://www.officeplus.cn", type: "资源", view: 478, like: 133 }
+  { id: 33, name: "资源避难所", desc: "PC/安卓软件+游戏资源整合分享", url: "https://ziyuannansuo.com", type: "资源", view: 892, like: 268 },
+  { id: 34, name: "资源喵网", desc: "全网稀缺资源汇总，免费下载", url: "https://ziyuanniao.com", type: "资源", view: 873, like: 262 },
+  { id: 35, name: "莱卡云", desc: "云计算资源与服务，免费体验/学习", url: "https://laikayun.com", type: "资源", view: 689, like: 207 }
 ];
