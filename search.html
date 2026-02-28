@@ -63,56 +63,115 @@ footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25
 </footer>
 
 <script src="tool-data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js"></script>
+
 <script>
-function addView(id) {
-  const item = toolList.find(i => i.id === id);
-  if (item) {
-    item.view++;
-    doFilter();
+// ==================== Supabase 配置（你的信息） ====================
+const SUPABASE_URL = "https://yamonzbighacvvehwaad.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlhbW9uemJpZ2hhY3Z2ZWh3YWFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNTI1NTUsImV4cCI6MjA4NzgyODU1NX0.xo-gMJi_7q4Wb9vpjs-BD-5RsmAM_erIQrpoXbFwj1M"; // 替换为完整密钥
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ==================== 缓存 DOM 元素 ====================
+const cardContainer = document.getElementById("cardContainer");
+const searchInput = document.getElementById("searchInput");
+
+// ==================== 数据加载+排序+同步 ====================
+async function loadData() {
+  try {
+    const { data, error } = await supabase
+      .from('tool_stats')
+      .select('id, like_count, view_count');
+
+    if (error) throw error;
+    if (data) {
+      // 同步数据库数据到本地列表
+      data.forEach(stat => {
+        const tool = toolList.find(t => t.id === stat.id);
+        if (tool) {
+          tool.like = stat.like_count;
+          tool.view = stat.view_count;
+        }
+      });
+    }
+  } catch (err) {
+    console.warn("加载数据失败，使用本地默认值：", err);
+  } finally {
+    // 核心：按浏览量降序排序（浏览量越高越靠前）
+    toolList.sort((a, b) => b.view - a.view);
+    // 排序后再渲染
+    renderAll();
   }
 }
 
-function likeItem(id) {
-  const item = toolList.find(i => i.id === id);
-  if (item) {
+async function syncToSupabase(id, type) {
+  const tool = toolList.find(t => t.id === id);
+  if (!tool) return;
+
+  const updateData = type === 'like' 
+    ? { like_count: tool.like } 
+    : { view_count: tool.view };
+
+  const { error } = await supabase
+    .from('tool_stats')
+    .update(updateData)
+    .eq('id', id);
+
+  if (error) console.warn("同步失败：", error);
+}
+
+// ==================== 渲染与交互（无闪烁） ====================
+function createToolCard(item) {
+  const card = document.createElement("div");
+  card.className = "tool-card";
+  card.innerHTML = `
+    <h3>${item.name}</h3>
+    <div class="desc">${item.desc}</div>
+    <div class="stats">
+      <span class="view-count" data-id="${item.id}">👁️ ${item.view}</span>
+      <span class="like-count" data-id="${item.id}" style="cursor:pointer">👍 ${item.like}</span>
+    </div>
+    <a href="${item.url}" target="_blank" class="go" data-id="${item.id}">前往</a>
+  `;
+
+  // 点赞事件（无闪烁）
+  card.querySelector(".like-count").addEventListener("click", () => {
     item.like++;
-    doFilter();
-  }
+    card.querySelector(".like-count").textContent = `👍 ${item.like}`;
+    syncToSupabase(item.id, 'like');
+  });
+
+  // 访问量事件（无闪烁）
+  card.querySelector(".go").addEventListener("click", () => {
+    item.view++;
+    card.querySelector(".view-count").textContent = `👁️ ${item.view}`;
+    syncToSupabase(item.id, 'view');
+    // 可选：点击后重新排序（如需实时更新排行）
+    // toolList.sort((a, b) => b.view - a.view);
+    // renderAll();
+  });
+
+  return card;
 }
 
-function doFilter(){
-  const e=new URLSearchParams(location.search),t=e.get("type"),i=e.get("q");
-  let a=toolList,s="";
-  t?(a=toolList.filter(o=>o.type===t),s="分类："+t):i&&(a=toolList.filter(o=>o.name.includes(i)||o.desc.includes(i)),s="搜索："+i);
-  document.getElementById("resultTitle").textContent=`${s}（共 ${a.length} 个）`;
-  const r=document.getElementById("cardContainer");
-  if(r.innerHTML="",0===a.length)return void(r.innerHTML=`<div class="empty">暂无结果，换个关键词试试～</div>`);
-  a.forEach(o=>{
-    r.innerHTML+=`
-      <div class="tool-card">
-        <h3>${o.name}</h3>
-        <div class="desc">${o.desc}</div>
-        <div class="stats">
-          <span>👁️ ${o.view}</span>
-          <span onclick="likeItem(${o.id})" style="cursor:pointer">👍 ${o.like}</span>
-        </div>
-        <a href="${o.url}" target="_blank" class="go" onclick="addView(${o.id})">前往</a>
-      </div>
-    `
-  })
+function renderAll() {
+  cardContainer.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+  toolList.forEach(item => fragment.appendChild(createToolCard(item)));
+  cardContainer.appendChild(fragment);
 }
 
-function goSearch(){
-  const e=document.getElementById("searchInput").value.trim();
-  e&&(location.href=`search.html?q=${encodeURIComponent(e)}`);
+// ==================== 搜索/分类跳转 ====================
+function goSearch() {
+  const q = searchInput.value.trim();
+  q && (location.href = `search.html?q=${encodeURIComponent(q)}`);
 }
 
-function goType(e){
-  location.href=`search.html?type=${encodeURIComponent(e)}`;
+function goType(type) {
+  location.href = `search.html?type=${encodeURIComponent(type)}`;
 }
 
-doFilter();
+// ==================== 初始化 ====================
+loadData();
 </script>
-
 </body>
 </html>
