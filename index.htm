@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>看上 - 实用工具导航</title>
 <style>
+/* 原有样式完全保留，只加弹窗相关（如果有冲突会注释） */
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",Arial,sans-serif}
 :root{--primary-color:#fff;--secondary-color:#87E8DE;--secondary-dark:#6BC9BE;--text-color:#333;--light-gray:#f5f5f5;--border-color:#e0e0e0}
 body{background:var(--light-gray);color:var(--text-color);line-height:1.6}
@@ -30,7 +31,20 @@ body{background:var(--light-gray);color:var(--text-color);line-height:1.6}
 .tool-card .stats{display:flex;justify-content:space-between;font-size:12px;color:#999;margin-bottom:12px}
 .tool-card .go{display:inline-block;background:var(--secondary-color);color:#fff;font-size:13px;padding:6px 11px;border-radius:6px;text-decoration:none}
 .tool-card .go:hover{background:var(--secondary-dark)}
-footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25px 0;margin-top:50px}
+/* 免责声明样式 */
+.disclaimer{
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 15px 20px;
+  background: #fff9c4;
+  border-left: 4px solid #ffc107;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+}
+footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25px 0;margin-top:20px}
+/* 弹窗样式已内置在toast.js中，这里不用加 */
 </style>
 </head>
 <body>
@@ -61,33 +75,42 @@ footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25
 
 <div class="rank-container" id="cardContainer"></div>
 
+<!-- 免责声明 -->
+<div class="disclaimer">
+  <strong>免责声明：</strong>本站仅为工具导航服务，不制作、不存储任何工具内容，所有工具链接均来自互联网公开资源。
+  用户使用第三方工具时产生的一切行为、版权、合规问题，均由用户自行承担。若有侵权，请联系站长删除相关链接。
+</div>
+
 <footer>
   <p>© 2026 看上 - 让生活更方便</p>
 </footer>
 
+<!-- 关键：先引入toast.js，再引入其他文件（顺序不能错） -->
+<script src="toast.js"></script>
 <script src="tool-data.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js"></script>
 
 <script>
-// ==================== Supabase 配置（替换为你的密钥） ====================
+// ==================== 数据库部分 完全保留 ====================
 const SUPABASE_URL = "https://yamonzbighacvvehwaad.supabase.co";
-const SUPABASE_KEY = "你的完整Anon Key"; // 替换为自己的完整密钥
+const SUPABASE_KEY = "你的完整Anon Key"; // 替换成你的密钥
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ==================== 缓存 DOM 元素 ====================
 const cardContainer = document.getElementById("cardContainer");
 const searchInput = document.getElementById("searchInput");
 
-// ==================== 数据加载+排序+同步 ====================
+// 页面加载完成就弹测试弹窗（验证弹窗是否生效）
+window.onload = function() {
+  Toast.success("页面加载成功！"); // 测试弹窗，必弹
+};
+
 async function loadData() {
   try {
     const { data, error } = await supabase
       .from('tool_stats')
       .select('id, like_count, view_count');
-
     if (error) throw error;
     if (data) {
-      // 同步数据库数据到本地列表
       data.forEach(stat => {
         const tool = toolList.find(t => t.id === stat.id);
         if (tool) {
@@ -96,10 +119,11 @@ async function loadData() {
         }
       });
     }
+    Toast.success("数据加载成功！"); // 数据加载成功弹窗
   } catch (err) {
     console.warn("加载数据失败，使用本地默认值：", err);
+    Toast.error("数据加载失败，使用本地数据！"); // 数据加载失败弹窗
   } finally {
-    // 按浏览量降序排序
     toolList.sort((a, b) => b.view - a.view);
     renderAll();
   }
@@ -108,20 +132,16 @@ async function loadData() {
 async function syncToSupabase(id, type) {
   const tool = toolList.find(t => t.id === id);
   if (!tool) return;
-
-  const updateData = type === 'like' 
-    ? { like_count: tool.like } 
-    : { view_count: tool.view };
-
-  const { error } = await supabase
-    .from('tool_stats')
-    .update(updateData)
-    .eq('id', id);
-
-  if (error) console.warn("同步失败：", error);
+  const updateData = type === 'like' ? { like_count: tool.like } : { view_count: tool.view };
+  const { error } = await supabase.from('tool_stats').update(updateData).eq('id', id);
+  if (error) {
+    console.warn("同步失败：", error);
+    Toast.error(type === 'like' ? "点赞同步失败！" : "访问量同步失败！");
+  } else {
+    Toast.success(type === 'like' ? "点赞成功！" : "访问量更新成功！");
+  }
 }
 
-// ==================== 渲染与交互 ====================
 function createToolCard(item) {
   const card = document.createElement("div");
   card.className = "tool-card";
@@ -134,21 +154,19 @@ function createToolCard(item) {
     </div>
     <a href="${item.url}" target="_blank" class="go" data-id="${item.id}">前往</a>
   `;
-
-  // 点赞事件
+  // 点赞弹窗
   card.querySelector(".like-count").addEventListener("click", () => {
     item.like++;
     card.querySelector(".like-count").textContent = `👍 ${item.like}`;
     syncToSupabase(item.id, 'like');
   });
-
-  // 访问量事件
+  // 前往按钮弹窗
   card.querySelector(".go").addEventListener("click", () => {
     item.view++;
     card.querySelector(".view-count").textContent = `👁️ ${item.view}`;
     syncToSupabase(item.id, 'view');
+    Toast.show(`正在前往「${item.name}」...`); // 普通提示
   });
-
   return card;
 }
 
@@ -159,17 +177,26 @@ function renderAll() {
   cardContainer.appendChild(fragment);
 }
 
-// ==================== 搜索/分类跳转 ====================
+// 搜索空内容弹窗
 function goSearch() {
   const q = searchInput.value.trim();
-  if (q) location.href = `search.html?q=${encodeURIComponent(q)}`;
+  if (!q) { 
+    Toast.error("请输入搜索关键词！"); // 搜索空内容弹窗
+    return; 
+  }
+  location.href = `search.html?q=${encodeURIComponent(q)}`;
 }
 
 function goType(type) {
   location.href = `search.html?type=${encodeURIComponent(type)}`;
 }
 
-// ==================== 初始化 ====================
+// 回车搜索
+searchInput.addEventListener("keypress", e => {
+  if (e.key === "Enter") goSearch();
+});
+
+// 初始化加载数据
 loadData();
 </script>
 </body>
