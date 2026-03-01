@@ -61,6 +61,8 @@ footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25
   <p>© 2026 看上 - 让生活更方便</p>
 </footer>
 
+<!-- 新增：引入弹窗脚本，确保search页也有弹窗 -->
+<script src="toast.js"></script>
 <script src="tool-data.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js"></script>
 
@@ -180,7 +182,11 @@ function doFilter() {
 // ==================== 搜索/分类跳转 ====================
 function goSearch() {
   const q = searchInput.value.trim();
-  if (q) location.href = `search.html?q=${encodeURIComponent(q)}`;
+  if (!q) {
+    Toast.error("请输入搜索关键词！"); // 新增弹窗提示
+    return;
+  }
+  location.href = `search.html?q=${encodeURIComponent(q)}`;
 }
 
 function goType(type) {

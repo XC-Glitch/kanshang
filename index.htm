@@ -32,9 +32,11 @@ body{background:var(--light-gray);color:var(--text-color);line-height:1.6}
 .tool-card .go{display:inline-block;background:var(--secondary-color);color:#fff;font-size:13px;padding:6px 11px;border-radius:6px;text-decoration:none}
 .tool-card .go:hover{background:var(--secondary-dark)}
 /* 免责声明样式 */
+/* 替换index.html里的disclaimer样式 */
 .disclaimer{
+  display: block !important; /* 强制显示，优先级最高 */
   max-width: 1200px;
-  margin: 30px auto;
+  margin: 30px auto !important; /* 确保居中且不被遮挡 */
   padding: 15px 20px;
   background: #fff9c4;
   border-left: 4px solid #ffc107;
@@ -42,6 +44,9 @@ body{background:var(--light-gray);color:var(--text-color);line-height:1.6}
   font-size: 13px;
   color: #666;
   line-height: 1.6;
+  width: 90%; /* 适配手机等小屏 */
+  z-index: 10; /* 高于背景，低于弹窗 */
+  box-sizing: border-box;
 }
 footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25px 0;margin-top:20px}
 /* 弹窗样式已内置在toast.js中，这里不用加 */
@@ -93,17 +98,27 @@ footer{background:var(--secondary-color);color:#fff;text-align:center;padding:25
 <script>
 // ==================== 数据库部分 完全保留 ====================
 const SUPABASE_URL = "https://yamonzbighacvvehwaad.supabase.co";
-const SUPABASE_KEY = "你的完整Anon Key"; // 替换成你的密钥
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlhbW9uemJpZ2hhY3Z2ZWh3YWFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNTI1NTUsImV4cCI6MjA4NzgyODU1NX0.xo-gMJi_7q4Wb9vpjs-BD-5RsmAM_erIQrpoXbFwj1M"; // 替换成你的密钥
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const cardContainer = document.getElementById("cardContainer");
 const searchInput = document.getElementById("searchInput");
 
-// 页面加载完成就弹测试弹窗（验证弹窗是否生效）
+// 仅弹窗免责声明，页面加载时弹一次
 window.onload = function() {
-  Toast.success("页面加载成功！"); // 测试弹窗，必弹
+  Toast.show(`
+    免责声明：本站仅为工具导航服务，不制作、不存储任何工具内容，所有工具链接均来自互联网公开资源。
+    用户使用第三方工具时产生的一切行为、版权、合规问题，均由用户自行承担。若有侵权，请联系站长删除相关链接。
+  `, 'default');
 };
 
+ //页面加载完成就弹测试弹窗（验证弹窗是否生效）
+// 页面加载完成后，弹出手动关闭的免责声明
+window.onload = function() {
+  Toast.showDisclaimer(); // 仅弹这个，删除所有其他弹窗代码
+};
+
+// 确保这部分代码完整存在于 index.html 的 <script> 中
 async function loadData() {
   try {
     const { data, error } = await supabase
@@ -119,29 +134,25 @@ async function loadData() {
         }
       });
     }
-    Toast.success("数据加载成功！"); // 数据加载成功弹窗
   } catch (err) {
     console.warn("加载数据失败，使用本地默认值：", err);
-    Toast.error("数据加载失败，使用本地数据！"); // 数据加载失败弹窗
   } finally {
     toolList.sort((a, b) => b.view - a.view);
-    renderAll();
+    renderAll(); // 关键：无论是否加载成功，都渲染卡片
   }
 }
 
-async function syncToSupabase(id, type) {
-  const tool = toolList.find(t => t.id === id);
-  if (!tool) return;
-  const updateData = type === 'like' ? { like_count: tool.like } : { view_count: tool.view };
-  const { error } = await supabase.from('tool_stats').update(updateData).eq('id', id);
-  if (error) {
-    console.warn("同步失败：", error);
-    Toast.error(type === 'like' ? "点赞同步失败！" : "访问量同步失败！");
-  } else {
-    Toast.success(type === 'like' ? "点赞成功！" : "访问量更新成功！");
-  }
+function renderAll() {
+  cardContainer.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+  toolList.forEach(item => fragment.appendChild(createToolCard(item)));
+  cardContainer.appendChild(fragment);
 }
 
+// 确保初始化调用未被删除
+loadData();
+
+ 
 function createToolCard(item) {
   const card = document.createElement("div");
   card.className = "tool-card";
