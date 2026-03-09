@@ -3,7 +3,8 @@ const toolList = [
   { id: 2, name: "Map Genie", desc: "3A游戏地图工具，精准导航游戏场景", url: "https://mapgenie.io", type: "工具", view: 625, like: 188 },
   { id: 3, name: "I miss the office", desc: "模拟办公室氛围的声音工具，放松/专注使用", url: "https://imisstheoffice.eu/", type: "工具", view: 832, like: 249 },
   { id: 5, name: "大额流量卡", desc: "流量卡办理与知识科普，生活学习实用参考", url: "https://daliuliangka.com", type: "工具", view: 587, like: 176 },
-
+  { id: 6, name: "开发者导航-陌上开花", desc: "开发者工具导航网站，提供各种开发者工具", url: "https://codernav.com/#term-8631", type: "工具", view: 623, like: 187 },
+  { id: 7, name: "玖玖影院", desc: "免费在线观看电影和电视剧", url: "https://www.99dy.vip/", type: "影视", view: 625, like: 188 },
 
 
 
